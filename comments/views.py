@@ -36,6 +36,7 @@ def paginate_queryset(request, queryset, count):
 def comments_index(request):
     paginate = request.GET.get(key="paginate", default="2")
     comments_list = Comment.objects.all()
+    # comments_list = Comment.objects.all().order_by('-created_at')
     page_obj = paginate_queryset(request, comments_list, paginate)
     context = {
         'comments' : page_obj.object_list,
