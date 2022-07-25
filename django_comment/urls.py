@@ -15,8 +15,13 @@ Including another URLconf
 """
 # from django.contrib import admin
 from django.urls import include, path
+from . import settings
 
 urlpatterns = [
     path('', include('comments.urls')),
     # path('admin/', admin.site.urls),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns.append(path("", include(debug_toolbar.urls)))
