@@ -22,9 +22,15 @@ class CommentForm(forms.ModelForm):
         data = super().clean()
         title = data.get('title')
         body = data.get('body')
-        if len(title) > 10:
+        if title is None:
+            msg = "タイトルが入力されていません"
+            self.add_error('title', msg)
+        elif len(title) > 10:
             msg = "タイトルの最大文字数は10文字です"
             self.add_error('title', msg)
-        if len(body) > 15:
-            msg = "本文の最大文字数は15文字です"
+        if body is None:
+            msg = "本文が入力されていません"
+            self.add_error('body', msg)
+        elif len(body) > 20:
+            msg = "本文の最大文字数は20文字です"
             self.add_error('body', msg)

@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 # from django.http import HttpResponse
 from django.urls import reverse_lazy
 # from django.views.generic import ListView
 # from django.views.generic import DetailView
-from django.views.generic import CreateView
+# from django.views.generic import CreateView
 from django.views.generic import UpdateView
 from django.views.generic import DeleteView
 from django.shortcuts import redirect
@@ -71,21 +72,52 @@ def comments_show(request, comment_id):
 
     return render(request, 'comments/show.html', context)
 
-class CreateCommentView(CreateView):
-    model = Comment
-    form_class = CommentForm
-    success_url = reverse_lazy('comments:index')
+# class CreateCommentView(CreateView):
+#     model = Comment
+#     form_class = CommentForm
+#     success_url = reverse_lazy('comments:index')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['page_title'] = 'コメントの投稿'
+#         context['form_name'] = 'コメントの投稿'
+#         context['button_label'] = 'コメントを投稿する'
+#         return context
+#     def form_valid(self, form):
+#         self.object = comment = form.save()
+#         messages.success(self.request, 'コメントを投稿しました')
+#         return redirect(self.get_success_url())
+
+def comments_create(request):
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = Comment()
+            comment.title = form.cleaned_data.get("title")
+            comment.body = form.cleaned_data.get("body")
+            comment.save()
+            messages.success(request, '投稿しました')
+            return redirect(reverse('comments:index'))
+        else:
+            # エラーメッセージをつけて返す
+            context = {}
+            context['page_title'] = 'コメントの投稿'
+            context['form_name'] = 'コメントの投稿'
+            context['button_label'] = 'コメントを投稿する'
+            context['form'] = form
+            return render(request, 'comments/form.html', context)
+    else:
+        context = {}
+        context['form'] = CommentForm(
+                            initial={
+                                # 'title' : 'title',
+                            }
+                        )
         context['page_title'] = 'コメントの投稿'
         context['form_name'] = 'コメントの投稿'
         context['button_label'] = 'コメントを投稿する'
-        return context
-    def form_valid(self, form):
-        self.object = comment = form.save()
-        messages.success(self.request, 'コメントを投稿しました')
-        return redirect(self.get_success_url())
+        return render(request, 'comments/form.html', context)
+
 
 class UpdateCommentView(UpdateView):
     model = Comment
