@@ -1,0 +1,11 @@
+.flash_message {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+  color: #ffc;
+  background: #417690;
+}
+
+.hidden {
+  display: none;
+}
