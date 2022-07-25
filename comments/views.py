@@ -16,6 +16,7 @@ from .models import Comment
 class CommentIndexView(ListView):
   model = Comment
   queryset = Comment.objects.order_by('-updated_at')
+  paginate_by = 2
 
 class ShowCommentView(DetailView):
   model = Comment
