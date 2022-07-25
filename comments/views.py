@@ -1,8 +1,9 @@
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 # from django.http import HttpResponse
 from django.urls import reverse_lazy
 # from django.views.generic import ListView
-from django.views.generic import DetailView
+# from django.views.generic import DetailView
 from django.views.generic import CreateView
 from django.views.generic import UpdateView
 from django.views.generic import DeleteView
@@ -45,8 +46,14 @@ def comments_index(request):
     }
     return render(request, 'comments/index.html', context)
 
-class ShowCommentView(DetailView):
-  model = Comment
+# class ShowCommentView(DetailView):
+#   model = Comment
+
+def comments_show(request, comment_id):
+    context = {}
+    comment = get_object_or_404(Comment, pk=comment_id)
+    context['comment'] = comment
+    return render(request, 'comments/show.html', context)
 
 class CreateCommentView(CreateView):
     model = Comment
