@@ -10,6 +10,7 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from .forms import CommentForm
 from .models import Comment
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 # def index(request):
@@ -20,9 +21,27 @@ from .models import Comment
 #   queryset = Comment.objects.order_by('-updated_at')
 #   paginate_by = 2
 
+def paginate_queryset(request, queryset, count):
+    paginator = Paginator(queryset, count)
+    page = request.GET.get('page')
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+    return page_obj
+
+
 def comments_index(request):
-    context = {}
-    context['comments'] = Comment.objects.all()
+    paginate = request.GET.get(key="paginate", default="2")
+    comments_list = Comment.objects.all()
+    page_obj = paginate_queryset(request, comments_list, paginate)
+    context = {
+        'comments' : page_obj.object_list,
+        'page_obj': page_obj,
+        'paginate': paginate,
+    }
     return render(request, 'comments/index.html', context)
 
 class ShowCommentView(DetailView):
