@@ -1,7 +1,7 @@
-# from django.shortcuts import render
+from django.shortcuts import render
 # from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.views.generic import ListView
+# from django.views.generic import ListView
 from django.views.generic import DetailView
 from django.views.generic import CreateView
 from django.views.generic import UpdateView
@@ -15,10 +15,15 @@ from .models import Comment
 # def index(request):
 #     return HttpResponse("Hello, world. You're at the comments index.")
 
-class CommentIndexView(ListView):
-  model = Comment
-  queryset = Comment.objects.order_by('-updated_at')
-  paginate_by = 2
+# class CommentIndexView(ListView):
+#   model = Comment
+#   queryset = Comment.objects.order_by('-updated_at')
+#   paginate_by = 2
+
+def comments_index(request):
+    context = {}
+    context['comments'] = Comment.objects.all()
+    return render(request, 'comments/index.html', context)
 
 class ShowCommentView(DetailView):
   model = Comment
