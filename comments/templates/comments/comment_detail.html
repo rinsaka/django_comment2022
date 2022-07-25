@@ -22,5 +22,13 @@
       Updated at : {{ comment.updated_at }}
     </div>
   </div>
+  <hr>
+    <div>
+      <p>
+        <a href="{% url 'comments:update' comment.id %}">
+          [ 編集 ]
+        </a>
+      </p>
+    </div>
 </div>
 {% endblock content %}
