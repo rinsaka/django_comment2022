@@ -19,5 +19,13 @@
     </div>
   </div>
   {% endfor %}
+  <hr>
+  <div>
+    <p>
+      <a href="{% url 'comments:create' %}">
+        新規コメントの投稿
+      </a>
+    </p>
+  </div>
 </div>
 {% endblock content %}
