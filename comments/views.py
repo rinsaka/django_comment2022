@@ -5,6 +5,7 @@ from django.views.generic import ListView
 from django.views.generic import DetailView
 from django.views.generic import CreateView
 from django.views.generic import UpdateView
+from django.views.generic import DeleteView
 from .forms import CommentForm
 from .models import Comment
 
@@ -41,3 +42,7 @@ class UpdateCommentView(UpdateView):
         context['form_name'] = 'コメントの更新'
         context['button_label'] = 'コメントを更新する'
         return context
+
+class DeleteCommentView(DeleteView):
+    model = Comment
+    success_url = reverse_lazy('comments:index')
