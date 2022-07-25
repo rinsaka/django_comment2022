@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 # from django.views.generic import ListView
 # from django.views.generic import DetailView
 # from django.views.generic import CreateView
-from django.views.generic import UpdateView
+# from django.views.generic import UpdateView
 from django.views.generic import DeleteView
 from django.shortcuts import redirect
 from django.contrib import messages
@@ -119,21 +119,53 @@ def comments_create(request):
         return render(request, 'comments/form.html', context)
 
 
-class UpdateCommentView(UpdateView):
-    model = Comment
-    form_class = CommentForm
-    success_url = reverse_lazy('comments:index')
+# class UpdateCommentView(UpdateView):
+#     model = Comment
+#     form_class = CommentForm
+#     success_url = reverse_lazy('comments:index')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['page_title'] = 'コメントの更新'
-        context['form_name'] = 'コメントの更新'
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['page_title'] = 'コメントの更新'
+#         context['form_name'] = 'コメントの更新'
+#         context['button_label'] = 'コメントを更新する'
+#         return context
+#     def form_valid(self, form):
+#         self.object = comment = form.save()
+#         messages.success(self.request, 'コメントを更新しました')
+#         return redirect(self.get_success_url())
+
+def comments_update(request, comment_id):
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = get_object_or_404(Comment, pk=comment_id)
+            comment.title = form.cleaned_data.get("title")
+            comment.body = form.cleaned_data.get("body")
+            comment.save()
+            messages.success(request, '更新しました')
+            return redirect(reverse('comments:index'))
+        else:
+            # エラーメッセージをつけて返す
+            context = {}
+            context['page_title'] = 'コメントの編集'
+            context['form_name'] = 'コメントの編集'
+            context['button_label'] = 'コメントを更新する'
+            context['form'] = form
+            return render(request, 'comments/form.html', context)
+    else:
+        context = {}
+        comment = get_object_or_404(Comment, pk=comment_id)
+        context['form'] = CommentForm(
+                            initial={
+                                'title' : comment.title,
+                                'body' : comment.body,
+                            }
+                        )
+        context['page_title'] = 'コメントの編集'
+        context['form_name'] = 'コメントの編集'
         context['button_label'] = 'コメントを更新する'
-        return context
-    def form_valid(self, form):
-        self.object = comment = form.save()
-        messages.success(self.request, 'コメントを更新しました')
-        return redirect(self.get_success_url())
+        return render(request, 'comments/form.html', context)
 
 class DeleteCommentView(DeleteView):
     model = Comment
