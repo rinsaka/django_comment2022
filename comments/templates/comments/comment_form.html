@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 
+{% block title %}
+{{ page_title }}
+{% endblock %}
+
   {% block content %}
   <div class="container">
-    <h1 class="my-5">投稿フォーム</h1>
+    <h1 class="my-5">{{ form_name }}</h1>
     <form method="POST">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit" class="btn btn-primary">コメントを投稿する</button>
+      <button type="submit" class="btn btn-primary">{{ button_label }}</button>
     </form>
   </div>
   {% endblock content %}

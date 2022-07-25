@@ -23,7 +23,21 @@ class CreateCommentView(CreateView):
     form_class = CommentForm
     success_url = reverse_lazy('comments:index')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'コメントの投稿'
+        context['form_name'] = 'コメントの投稿'
+        context['button_label'] = 'コメントを投稿する'
+        return context
+
 class UpdateCommentView(UpdateView):
     model = Comment
     form_class = CommentForm
     success_url = reverse_lazy('comments:index')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'コメントの更新'
+        context['form_name'] = 'コメントの更新'
+        context['button_label'] = 'コメントを更新する'
+        return context
