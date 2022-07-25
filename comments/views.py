@@ -53,6 +53,22 @@ def comments_show(request, comment_id):
     context = {}
     comment = get_object_or_404(Comment, pk=comment_id)
     context['comment'] = comment
+
+    # 1つ前（自身の直後に更新されたコメント）を取得する
+    prev_comment = Comment.objects.filter(updated_at__gt=comment.updated_at).order_by('updated_at')
+    # 1つ後（自身の直前に更新されたコメント）を取得する
+    next_comment = Comment.objects.filter(updated_at__lt=comment.updated_at).order_by('-updated_at')
+    if len(prev_comment) > 0:
+        prev_id = prev_comment[0].id
+    else:
+        prev_id = False
+    if len(next_comment) > 0:
+        next_id = next_comment[0].id
+    else:
+        next_id = False
+    context['prev_id'] = prev_id
+    context['next_id'] = next_id
+
     return render(request, 'comments/show.html', context)
 
 class CreateCommentView(CreateView):

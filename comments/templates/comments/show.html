@@ -7,6 +7,7 @@
 {% block content %}
 <div class="container">
   <h1 class="my-5">コメント {{ comment.id }}</h1>
+  {% include 'prev_next.html' %}
   <div class="card mb-3">
     <div class="card-header">
       ID : {{ comment.id }}
@@ -32,6 +33,12 @@
           [ 削除 ]
         </a>
       </p>
+      <p class="pull-right">
+        <a href="{% url 'comments:index' %}">
+          一覧ページに戻る
+        </a>
+      </p>
     </div>
+    {% include 'prev_next.html' %}
 </div>
 {% endblock content %}
