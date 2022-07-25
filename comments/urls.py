@@ -8,5 +8,5 @@ urlpatterns = [
     path('<int:comment_id>', views.comments_show, name='show'),
     path('create/', views.comments_create, name='create'),
     path('<int:comment_id>/update/', views.comments_update, name='update'),
-    path('<int:pk>/delete/', views.DeleteCommentView.as_view(), name='delete'),
+    path('<int:comment_id>/delete/', views.comments_delete, name='delete'),
 ]

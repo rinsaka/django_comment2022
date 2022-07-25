@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 # from django.views.generic import DetailView
 # from django.views.generic import CreateView
 # from django.views.generic import UpdateView
-from django.views.generic import DeleteView
+# from django.views.generic import DeleteView
 from django.shortcuts import redirect
 from django.contrib import messages
 from .forms import CommentForm
@@ -167,12 +167,29 @@ def comments_update(request, comment_id):
         context['button_label'] = 'コメントを更新する'
         return render(request, 'comments/form.html', context)
 
-class DeleteCommentView(DeleteView):
-    model = Comment
-    success_url = reverse_lazy('comments:index')
+# class DeleteCommentView(DeleteView):
+#     model = Comment
+#     success_url = reverse_lazy('comments:index')
 
-    def delete(self, request, *args, **kwargs):
-        self.object = comment = self.get_object()
+#     def delete(self, request, *args, **kwargs):
+#         self.object = comment = self.get_object()
+#         comment.delete()
+#         messages.success(self.request, 'コメントを削除しました')
+#         return redirect(self.get_success_url())
+
+def comments_delete(request, comment_id):
+    if request.method == 'POST':
+        comment = get_object_or_404(Comment, pk=comment_id)
         comment.delete()
-        messages.success(self.request, 'コメントを削除しました')
-        return redirect(self.get_success_url())
+        messages.success(request, 'コメントを削除しました')
+        return redirect(reverse('comments:index'))
+    else:
+        context = {}
+        comment = get_object_or_404(Comment, pk=comment_id)
+        context['id'] = comment_id
+        context['title'] = comment.title
+        context['body'] = comment.body
+        context['page_title'] = 'コメントの削除'
+        context['form_name'] = 'コメントを削除しますか'
+        context['button_label'] = 'コメントを削除する'
+        return render(request, 'comments/delete_confirm.html', context)
