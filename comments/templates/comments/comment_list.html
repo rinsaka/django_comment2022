@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>コメント一覧</title>
+</head>
+<body>
+{% block content %}
+<h1>コメント一覧</h1>
+<ul>
+    {% for comment in object_list %}
+      <li>
+          {{ comment.title }} : {{ comment.body }}
+      </li>
+    {% endfor %}
+</ul>
+{% endblock content %}
+</body>
+</html>
