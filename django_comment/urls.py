@@ -18,7 +18,7 @@ from django.urls import include, path
 from . import settings
 
 urlpatterns = [
-    path('', include('comments.urls')),
+    path('comments/', include('comments.urls')),
     # path('admin/', admin.site.urls),
 ]
 
