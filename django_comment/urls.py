@@ -15,13 +15,22 @@ Including another URLconf
 """
 # from django.contrib import admin
 from django.urls import include, path
+from django.views.generic.base import TemplateView
 from . import settings
+from django.conf.urls.static import static
+import os
 
 urlpatterns = [
     path('comments/', include('comments.urls')),
     # path('admin/', admin.site.urls),
+    path('', TemplateView.as_view(template_name='index.html'), name='index'),  # ルートURLで静的なindex.htmlを表示
 ]
 
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns.append(path("", include(debug_toolbar.urls)))
+
+
+# 開発環境での静的ファイルの配信設定
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=os.path.join(settings.BASE_DIR, 'static'))
